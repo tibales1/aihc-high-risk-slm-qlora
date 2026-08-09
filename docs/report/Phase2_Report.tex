@@ -243,14 +243,21 @@ tuning preference here but a requirement: at temperature 0.0 the same patient
 always yields the same assessment, which is what makes the system auditable.
 
 \subsection{Systems constraints}
-Two hardware realities shaped the design. \emph{Memory:} with checkpointing off,
-batch $8\times2$ exceeded the GPU; the shipped configuration (batch $8\times2$,
-checkpointing on) peaks at 10.73\,GB. \emph{Thermal:} the GPU is a passively
+Two hardware realities shaped the design. \emph{Memory:} with gradient
+checkpointing off, a micro-batch of 8 with accumulation 2 exceeded the card;
+enabling checkpointing brought that same configuration to a measured 10.73\,GB
+peak. The micro-batch was subsequently halved to 4 as a thermal measure, so the
+run as executed sat below that figure. \emph{Thermal:} the GPU is a passively
 cooled 70\,W datacenter card that, in a desktop chassis, throttles roughly
-$4\times$ within about 100 seconds of sustained load. A sequence of improvised
-interventions---an air duct, a floor fan ($\approx$\$30), a 60\,W power cap, and
-a batch-size reduction---held it at a stable 94\,\textdegree C, about
-2\,\textdegree C inside the hardware shutdown threshold, for the full run.
+$4\times$ within about 100 seconds of sustained load. An earlier attempt reached
+97\,\textdegree C and cut power to the machine; the card still read above
+69\,\textdegree C twenty minutes later with the system switched off, a passive
+heatsink having nowhere to shed heat even at zero load. The configuration that
+completed the run was improvised: a 40\,mm fan behind a cardboard duct over the
+leading edge of the fin stack, the chassis opened, and a floor fan directed into
+it, together with a 60\,W power cap and the reduced micro-batch. That held a
+stable 94\,\textdegree C---about 2\,\textdegree C inside the hardware shutdown
+threshold---for the full run.
 
 %% =====================================================================
 \section{Results}

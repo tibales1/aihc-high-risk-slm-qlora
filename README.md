@@ -56,8 +56,10 @@ Running inside that budget drove most of the technical decisions:
 
 - **4-bit NF4 quantization was the price of admission, not an optimization.**
   Llama-3.1-8B needs ~16.1 GB in fp16 against the card's 15.9 GB — it does not fit before
-  a single gradient is computed. Quantized, the weights occupy 5.59 GB and the full run
-  peaks at 10.73 GB.
+  a single gradient is computed. Quantized, the weights occupy 5.59 GB. Peak usage
+  measured 10.73 GB at micro-batch 8; the run as executed used micro-batch 4, since
+  halving it was one of the thermal interventions below, so its true peak sat lower and
+  was not separately measured.
 - **Only 6.8M of 8.03B parameters were ever trained** (0.085%). Everything else stayed
   frozen and quantized.
 - **Eliminating waste became a question of feasibility, not speed.** Padding every
