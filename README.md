@@ -31,10 +31,17 @@ Held-out evaluation on 200 patients the adapter never saw during training:
 Confusion matrix for the fine-tuned model (TN 170, FP 8, FN 12, TP 10). It flagged
 18 of 200 patients as high risk against a true prevalence of 22.
 
-Recall of 0.455 means the adapter still misses more than half of the patients who
-died. The gain over zero-shot is large — precision improves roughly fivefold — but
-the absolute numbers are well short of clinical usability, and the headline accuracy
-of 0.900 is mostly a reflection of the 11% base rate rather than of skill.
+Accuracy is close to uninformative here — answering "No" to all 200 already scores
+89%. What moved is the composition: **10 deaths caught for 8 false alarms, against
+the baseline's 4 caught for 33.** The adapter cut false alarms fourfold while catching
+two and a half times as many deaths, so it did not buy its precision by retreating into
+the majority class. Flagging 18 against a true count of 22 says it learned the scale of
+the problem rather than its safest answer. Specificity rose from 81.5% to 95.5%.
+
+The limits are real all the same. Recall of 0.455 still misses more than half the
+patients who died, which is well short of clinical usability for a screening tool. And
+22 positives is a small denominator: 10 of 22 carries a 95% interval of roughly
+0.27–0.65, so the direction is clear but the point estimate is soft.
 
 ## Repository layout
 
