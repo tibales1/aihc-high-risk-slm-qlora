@@ -1,0 +1,31 @@
+# =============================================================================
+# .gitignore
+# =============================================================================
+
+# Secrets
+.env
+
+# -----------------------------------------------------------------------------
+# MIMIC-derived data — do NOT publish (PhysioNet Data Use Agreement)
+# These files contain data derived from credentialed MIMIC-III records and
+# must never be pushed to a public/shared repository.
+# -----------------------------------------------------------------------------
+data/
+checkpoint_storage/
+*.csv
+*.jsonl
+
+# Notebook backups (may embed data in cell outputs)
+*.ipynb.bak
+
+# -----------------------------------------------------------------------------
+# Python
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# -----------------------------------------------------------------------------
+# Local machine-specific tooling config
+# -----------------------------------------------------------------------------
+.claude/settings.local.json
