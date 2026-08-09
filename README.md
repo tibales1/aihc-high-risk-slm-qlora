@@ -4,7 +4,8 @@ Final project, AI in Healthcare. Fine-tunes **Llama-3.1-8B** with **QLoRA** to f
 patients at high mortality risk, and compares it against the same untuned model
 zero-shot on an identical held-out sample.
 
-Everything here runs on a single **NVIDIA Tesla T4 (16 GB)**.
+Everything here runs **locally** on a single **NVIDIA Tesla T4 (16 GB)** — no cloud
+compute, on a 60 W power budget.
 
 ## On "high-risk"
 
@@ -42,6 +43,38 @@ The limits are real all the same. Recall of 0.455 still misses more than half th
 patients who died, which is well short of clinical usability for a screening tool. And
 22 positives is a small denominator: 10 of 22 carries a 95% interval of roughly
 0.27–0.65, so the direction is clear but the point estimate is soft.
+
+## Local compute, on a power budget
+
+Nothing here ran in a cloud. The whole fine-tune executed on one Tesla T4 in a desktop —
+a **70 W passively cooled datacenter card with no fan of its own**, power-capped to
+**60 W** for the production run. Energy at the card came to roughly **1.4 kWh**: the
+60 W cap across about 23 hours of wall clock, which is an upper bound, since the card
+spent much of that throttled below the cap. Host system draw is not included.
+
+Running inside that budget drove most of the technical decisions:
+
+- **4-bit NF4 quantization was the price of admission, not an optimization.**
+  Llama-3.1-8B needs ~16.1 GB in fp16 against the card's 15.9 GB — it does not fit before
+  a single gradient is computed. Quantized, the weights occupy 5.59 GB and the full run
+  peaks at 10.73 GB.
+- **Only 6.8M of 8.03B parameters were ever trained** (0.085%). Everything else stayed
+  frozen and quantized.
+- **Eliminating waste became a question of feasibility, not speed.** Padding every
+  ~97-token sample out to 512 spent 5.2× of the compute on padding, and computing loss
+  over the whole prompt taught the model to regurgitate its own instructions. Dynamic
+  per-batch padding and masking the loss to the single answer token brought the run down
+  to 1.6M tokens processed. On a thermally limited card, every wasted token is wasted
+  heat.
+- **The binding constraint was thermal, not computational.** The card throttles 4.4×
+  within roughly 100 seconds of sustained load, and on the first attempt hit 97 °C and
+  cut power to the entire machine. An air duct, a ~$30 fan, the 60 W cap, and a smaller
+  batch held it at a stable 94 °C for the full run — about 2 °C under the hardware
+  shutdown threshold.
+
+This is what the report's closing argument rests on: the large energy cost of this
+capability was spent upstream during pretraining and inherited here for free. Beating
+that base model cost about a kilowatt-hour and $30 of hardware.
 
 ## Repository layout
 
