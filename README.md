@@ -6,6 +6,19 @@ zero-shot on an identical held-out sample.
 
 Everything here runs on a single **NVIDIA Tesla T4 (16 GB)**.
 
+## On "high-risk"
+
+The name refers to the assignment, not to patient risk stratification. The course
+framing was to attempt something ambitious and account for it honestly — falling short
+of a good number costs nothing, provided the attempt and the reporting are real.
+
+That is why this README dwells on what broke. A recall of 0.455 is a weak classifier and
+a genuine result at the same time: the substance is that an 8B model, quantized to 4 bits
+on a passively cooled datacenter card wedged into a desktop, was made to beat its own
+zero-shot baseline on every metric at once — and that a validation leak was caught before
+it could invalidate the claim. The engineering account of the walls hit along the way is
+in [`docs/process/CONSTRAINTS_NARRATIVE.md`](docs/process/CONSTRAINTS_NARRATIVE.md).
+
 ## Result
 
 Held-out evaluation on 200 patients the adapter never saw during training:
@@ -64,7 +77,8 @@ of fp16 weights onto a 16 GB card and will most likely exhaust memory first.
 | [`docs/Phase2_Findings_v2.pptx`](docs/Phase2_Findings_v2.pptx) | Presentation slides, with speaker notes in `Phase2_Presentation_Script.md`. |
 | [`docs/PHASE2_FINDINGS.md`](docs/PHASE2_FINDINGS.md) | Engineering log for Phase 2 — the GPU-selection bug, the fp16 memory overrun, a `transformers` mmap crash, the leakage discovery, and the thermal ceiling. Written before the final run, so its projected step counts and batch sizes reflect a plan that was revised; the notebook and this README carry what actually ran. |
 | [`docs/PHASE_1_README.md`](docs/PHASE_1_README.md), [`docs/PHASE_2_README.md`](docs/PHASE_2_README.md) | Per-phase pipeline documentation. |
-| [`docs/process/`](docs/process/) | Working notes kept for provenance — the constraint narrative behind the report, and a session handoff. Not deliverables. |
+| [`docs/process/CONSTRAINTS_NARRATIVE.md`](docs/process/CONSTRAINTS_NARRATIVE.md) | The engineering narrative the report draws on — why the constraints are the result. Source material rather than a deliverable, but it carries the argument. |
+| [`docs/process/HANDOFF.md`](docs/process/HANDOFF.md) | A mid-project session note, kept for provenance. |
 
 Two example patient descriptions in `PHASE_1_README.md` were redacted before publication; they were rendered from real MIMIC-III admissions and paired with their mortality outcomes. The description template that produced them is in [`phase_1_lora_data_generation.py`](phase_1_lora_data_generation.py).
 
