@@ -32,6 +32,7 @@ of 0.900 is mostly a reflection of the 11% base rate rather than of skill.
 | `phase_2_setup_check.py` | Pre-flight validation: GPU, packages, data, VRAM estimate. |
 | `contamination_probe.py` | Probes the tuned adapter for memorization of training text. |
 | `phase_2_lora_finetuning.py` | **Superseded — see the warning below.** |
+| `docs/` | Report, slides, and engineering write-ups — see [Documentation](#documentation). |
 | `docs/figures/` | Confusion matrix, zero-shot vs. LoRA comparison, workflow diagram. |
 
 ### About `phase_2_lora_finetuning.py`
@@ -54,6 +55,18 @@ It differs from the canonical notebook in ways that matter:
 The first row is the important one: run as written, the script trains on the same
 200 patients it later evaluates on. The second row means it attempts to load ~16.1 GB
 of fp16 weights onto a 16 GB card and will most likely exhaust memory first.
+
+## Documentation
+
+| Document | What it is |
+|---|---|
+| [`docs/report/Phase2_Report.pdf`](docs/report/Phase2_Report.pdf) | The write-up, ACM `sigconf` format. Source in `Phase2_Report.tex`; compiles on Overleaf as-is against `docs/report/figures/`. |
+| [`docs/Phase2_Findings_v2.pptx`](docs/Phase2_Findings_v2.pptx) | Presentation slides, with speaker notes in `Phase2_Presentation_Script.md`. |
+| [`docs/PHASE2_FINDINGS.md`](docs/PHASE2_FINDINGS.md) | Engineering log for Phase 2 — the GPU-selection bug, the fp16 memory overrun, a `transformers` mmap crash, the leakage discovery, and the thermal ceiling. Written before the final run, so its projected step counts and batch sizes reflect a plan that was revised; the notebook and this README carry what actually ran. |
+| [`docs/PHASE_1_README.md`](docs/PHASE_1_README.md), [`docs/PHASE_2_README.md`](docs/PHASE_2_README.md) | Per-phase pipeline documentation. |
+| [`docs/process/`](docs/process/) | Working notes kept for provenance — the constraint narrative behind the report, and a session handoff. Not deliverables. |
+
+Two example patient descriptions in `PHASE_1_README.md` were redacted before publication; they were rendered from real MIMIC-III admissions and paired with their mortality outcomes. The description template that produced them is in [`phase_1_lora_data_generation.py`](phase_1_lora_data_generation.py).
 
 ## Method
 
@@ -140,4 +153,4 @@ structure, slide generation, and narration, and for source discovery and citatio
 formatting — all sources were independently retrieved, read, and verified against the
 publisher record. All prose, analysis, and argument are the author's own.
 
-Full findings are reported in the accompanying paper and slide deck.
+Full findings are reported in [`docs/report/Phase2_Report.pdf`](docs/report/Phase2_Report.pdf).
