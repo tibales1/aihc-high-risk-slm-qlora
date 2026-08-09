@@ -67,10 +67,13 @@ Running inside that budget drove most of the technical decisions:
   to 1.6M tokens processed. On a thermally limited card, every wasted token is wasted
   heat.
 - **The binding constraint was thermal, not computational.** The card throttles 4.4×
-  within roughly 100 seconds of sustained load, and on the first attempt hit 97 °C and
-  cut power to the entire machine. An air duct, a ~$30 fan, the 60 W cap, and a smaller
-  batch held it at a stable 94 °C for the full run — about 2 °C under the hardware
-  shutdown threshold.
+  within roughly 100 seconds of sustained load, and on an earlier attempt hit 97 °C and
+  cut power to the whole machine — it still read above 69 °C twenty minutes later, with
+  the computer switched off. A passive heatsink in a desktop has nowhere to put the heat
+  even at zero load. What finally made the run possible was improvised: a 40 mm fan
+  behind a **cardboard duct** over the leading edge of the fin stack, the case opened,
+  and a floor fan aimed into it, plus the 60 W cap and a smaller batch. That held a
+  stable 94 °C for the full run — roughly 2 °C under the hardware shutdown threshold.
 
 This is what the report's closing argument rests on: the large energy cost of this
 capability was spent upstream during pretraining and inherited here for free. Beating
